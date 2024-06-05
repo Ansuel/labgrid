@@ -35,12 +35,15 @@ class Environment:
                 module = importlib.import_module(user_import)
             sys.modules[module_name] = module
 
-    def get_target(self, role: str = 'main') -> Optional[Target]:
+    def get_target(self, role: str = None) -> Optional[Target]:
         """Returns the specified target or None if not found.
 
         Each target is initialized as needed.
         """
         from . import target_factory
+
+        if role is None:
+            role = self.config.get_option('role', 'main')
 
         if role not in self.targets:
             config = self.config.get_targets().get(role)
@@ -56,8 +59,14 @@ class Environment:
 
     def get_target_features(self):
         flags = set()
-        for value in self.config.get_targets().values():
-            flags = flags | set(value.get('features', {}))
+        role = self.config.get_option('role')
+
+        if role is not None:
+            config = self.config.get_targets().get(role)
+            return set(config.get('features', {}))
+        else:
+            for value in self.config.get_targets().values():
+                flags = flags | set(value.get('features', {}))
         return flags
 
     def cleanup(self):

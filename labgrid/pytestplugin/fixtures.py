@@ -25,6 +25,11 @@ def pytest_addoption(parser):
         dest='lg_env',
         help='labgrid environment config file.')
     group.addoption(
+        '--lg-role',
+        action='store',
+        dest='lg_role',
+        help='labgrid role to use (default \'main\').')
+    group.addoption(
         '--lg-coordinator',
         action='store',
         dest='lg_coordinator',

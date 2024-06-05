@@ -76,6 +76,7 @@ def pytest_configure(config):
         ConsoleLoggingReporter(lg_log)
     env_config = config.option.env_config
     lg_env = config.option.lg_env
+    lg_role = config.option.lg_role
     lg_coordinator = config.option.lg_coordinator
 
     if lg_env is None:
@@ -92,6 +93,8 @@ def pytest_configure(config):
         env = Environment(config_file=lg_env)
         if lg_coordinator is not None:
             env.config.set_option('crossbar_url', lg_coordinator)
+        if lg_role is not None:
+            env.config.set_option('role', lg_role)
     config.stash[LABGRID_ENV_KEY] = env
 
     processwrapper.enable_logging()
